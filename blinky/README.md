@@ -7,8 +7,8 @@ Here is how it was created....
 
         mix new blinky 
         added Bakefile
-        added relx.config
-        added led configs to the deps and config
+        edited mix.exs to properly setup exrm, etc
+        added led configs to the deps 
         editing blinky.ex to turn on the leds
 
 And here's how to build the firmware based on this project using [bakeware](http://bakeware.io):
