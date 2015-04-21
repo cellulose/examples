@@ -8,30 +8,31 @@ defmodule StopWatch.Application do
   @http_path "localhost:#{@http_port}/#{@cell_prefix}/#{@stop_watch_prefix}/"
 
   def start(_type, _args) do
+    :hub.start
     import Supervisor.Spec, warn: false
     dispatch = :cowboy_router.compile([	{:_, [
-      {"/#{@cell_prefix}/[...]", :jrtp_bridge, []},
+      {"/#{@cell_prefix}/[...]", :jrtp_bridge, %{}},
       {"/[...]", :cowboy_static, {:priv_dir, :stop_watch, "web", [{:mimetypes, :cow_mimetypes, :all}]}},
     ]} ])
-    {:ok, _pid} = :cowboy.start_http(:http, 10, [port: @http_port], 
+    {:ok, _pid} = :cowboy.start_http(:http, 10, [port: @http_port],
       [env: [dispatch: dispatch] ])
 
-    # startup the StopWatch.GenServer (which will populate the Echo Hub)
+    # startup the StopWatch.GenServer (which will populate the Echo :hub)
 
-    children = [ 
-      worker(StopWatch.GenServer, [startup_params], [name: :stop_watch]) 
+    children = [
+      worker(StopWatch.GenServer, [startup_params], [name: :stop_watch])
     ]
     opts = [strategy: :one_for_one, name: StopWatch.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   defp startup_params, do: %{
-    ticks: 0, 
+    ticks: 0,
     running: false,
     resolution: 100,
-    initializer: fn() -> 
+    initializer: fn() ->
       :hub.update([@stop_watch_prefix], [running: false])
-      :hub.manage([@stop_watch_prefix], []) 
+      :hub.manage([@stop_watch_prefix], [])
     end,
     announcer: &(:hub.update([@stop_watch_prefix], &1))
   }
@@ -43,8 +44,8 @@ defmodule StopWatch.GenServer do
   @moduledoc """
   A simple stopwatch genserver used for demonstrating atonomous genservers
   in elixir that can be optionally bound to cell.   This is a common pattern.
-  
-  Implements a basic counter with configurable resolution 
+
+  Implements a basic counter with configurable resolution
   (down to 1ms).  Implements "go", "stop", and "clear" functions.  Also
   implements a "time" genserver call, to return the number of ms passed.
   Also takes a "resolution" parameter (in ms).
@@ -57,7 +58,7 @@ defmodule StopWatch.GenServer do
     # REVIEW WHY NEED NAME HERE?  Why can't pass as option?
     GenServer.start_link __MODULE__, params, name: :stop_watch
   end
-  
+
   def init(state \\ nil) do
     default_state=%{ tref: nil, ticks: 0, running: false, resolution: 10,
                     announcer: (fn(_)->:ok end) }
@@ -69,12 +70,7 @@ defmodule StopWatch.GenServer do
     # setup config
     :ets.new :config, [:set, :public, :named_table]
 		:ets.insert :config, usn: "2f20202faf02"
-    
-    # test SSDP library
-    :io.format "starting ssdp\n"
-    {:ok, _} = :ssdp_root_device.start
-    {:ok, _} = :ssdp.start
-  
+
     {:ok, tref} = :timer.send_after(state.resolution, :tick)
     {:ok, %{state | tref: tref}}
   end
@@ -84,32 +80,32 @@ defmodule StopWatch.GenServer do
   @doc "start the stopwatch"
   def go(pid),    do: GenServer.cast(pid, :go)
 
-  @doc "stop the stopwatch" 
+  @doc "stop the stopwatch"
   def stop(pid),  do: GenServer.cast(pid, :stop)
 
-  @doc "clear the time on the stopwatch" 
+  @doc "clear the time on the stopwatch"
   def clear(pid), do: GenServer.cast(pid, :clear)
- 
-  @doc "get the current time of the stopwatch" 
+
+  @doc "get the current time of the stopwatch"
   def time(pid),  do: GenServer.call(pid, :time)
 
   # public (server) genserver handlers, which modify state
-  
+
   def handle_cast(:go, state) do
     {:ok, tref} = :timer.send_after(state.resolution, :tick)
-    new_state = %{state | running: true, tref: tref} 
+    new_state = %{state | running: true, tref: tref}
     announce(new_state)
     {:noreply, new_state}
   end
 
   def handle_cast(:stop, state) do
-    new_state = %{state | running: false} 
+    new_state = %{state | running: false}
     announce(new_state)
     {:noreply, new_state}
   end
 
   def handle_cast(:clear, state) do
-    new_state = %{state | ticks: 0} 
+    new_state = %{state | ticks: 0}
     announce(new_state)
     {:noreply, new_state}
   end
@@ -117,11 +113,11 @@ defmodule StopWatch.GenServer do
   def handle_call(:time, _from, state) do
     {:reply, state.ticks, state}
   end
-  
+
   # request handler (cell compatible)
 
   def handle_call({:request, _path, changes, _context}, _from, old_state) do
-    new_state = Enum.reduce changes, old_state, fn({k,v}, state) -> 
+    new_state = Enum.reduce changes, old_state, fn({k,v}, state) ->
       handle_set(k,v,state)
     end
     {:reply, :ok, new_state}
@@ -132,7 +128,7 @@ defmodule StopWatch.GenServer do
     if not state.running do
       cancel_any_current_timer(state)
       {:ok, tref} = :timer.send_after(state.resolution, :tick)
-      announce %{state | running: true, tref: tref}  
+      announce %{state | running: true, tref: tref}
     else
       state
     end
@@ -148,17 +144,17 @@ defmodule StopWatch.GenServer do
   end
 
   # handle setting "ticks" to zero to clear (cell)
-  def handle_set(:ticks, 0, state) do 
-    new_state = %{state | ticks: 0} 
+  def handle_set(:ticks, 0, state) do
+    new_state = %{state | ticks: 0}
     announce(new_state)
   end
 
-  
+
   # handle setting "resolution" (cell)
   # changes the resolution of the stopwatch.  Try to keep the current time
   # by computing a new tick count based on the new offset, and cancelling
   # timers.   Returns a new state
-  def handle_set(:resolution, nr, state) do 
+  def handle_set(:resolution, nr, state) do
     cur_msec = state.ticks * state.resolution
     cancel_any_current_timer(state)
     {:ok, tref} = :timer.send_after(nr, :tick)
@@ -167,24 +163,24 @@ defmodule StopWatch.GenServer do
   end
 
   # catch-all for handling bogus properties
-  
+
   def handle_set(_, _, state), do: state
-  
+
   # internal (timing) genserver handlers
 
-  def handle_info(:tick, state) do 
+  def handle_info(:tick, state) do
     if state.running do
       {:ok, tref} = :timer.send_after(state.resolution, :tick)
       new_state = %{state | ticks: (state.ticks + 1), tref: tref}
       announce_time_only(new_state)
-      {:noreply, new_state} 
+      {:noreply, new_state}
     else
-      {:noreply, state} 
+      {:noreply, state}
     end
   end
 
   # private helpers
-  
+
   # cancel current timer if present, and set timer ref to nil
   defp cancel_any_current_timer(state) do
     if (state.tref) do
@@ -208,14 +204,13 @@ defmodule StopWatch.GenServer do
     )
     state
   end
-    
+
   # returns dict of elemnts from source_dict that have keys in valid_keys
 
   defp elements_with_keys(source_dict, valid_keys) do
-    Enum.filter source_dict, fn({k, _v}) -> 
+    Enum.filter source_dict, fn({k, _v}) ->
       Enum.member?(valid_keys, k)
     end
   end
 
 end
-
