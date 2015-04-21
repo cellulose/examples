@@ -6,7 +6,7 @@ app.config(function($routeProvider) {
       when('/main', {controller:'MainCtrl', templateUrl:'main.html'}).
       otherwise({redirectTo:'/'});
 });
-  
+
 app.controller('MainCtrl', function($scope, Poller) {
   $scope.name = 'World';
   $scope.data = Poller.data;
@@ -17,7 +17,7 @@ app.run(function(Poller) {});
 app.factory('Poller', function($http, $timeout) {
   var data = { response: {}, calls: 0 };
   var poller = function() {
-    $http.get('telo/watch').then(function(r) {
+    $http.get('cell/watch').then(function(r) {
       data.response = r.data;
       data.calls++;
       $timeout(poller, 1000);
