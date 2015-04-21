@@ -1,0 +1,34 @@
+<!doctype html>
+<html ng-app>
+
+  <head lang="en">
+    <meta charset="utf-8">
+    <title>Stopwatch Sample</title>
+    <link rel="stylesheet" href="stopwatch.css">
+		<link rel="stylesheet" href="stylesheets/demo.css" type="text/css"> 
+    <script src="stopwatch.js"></script>
+		<script src="lib/raphael.js" type="text/javascript" charset="utf-8"></script> 
+		<script src="lib/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script> 
+		<script src="lib/jquery.tools.min.js"></script>
+		<script src="js/rcf_controls.js" type="text/javascript" charset="utf-8"></script> 
+		<script src="js/rcf_main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.14/angular.min.js"></script>
+  </head>
+  
+  <body>
+    <h2>Stopwatch Sample</h2>
+    <div class="vfo-display">
+	      <div class="rcf digits" id="timedisplay"></div>
+    </div>
+    <div ng-controller="StopwatchCtrl">
+      <p/>
+      Resolution (msec):
+      <select ng-model="model.resolution" ng-options="r for r in resolutions"></select>
+      <p/>
+      <a href="" class="button" ng-click="start()">Start</a>
+      <a href="" class="button" ng-click="stop()">Stop</a>
+      <a href="" class="button" ng-click="clear()">Clear</a>
+    </div>
+  </body>
+
+</html>

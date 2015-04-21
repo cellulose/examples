@@ -1,0 +1,9 @@
+%{"cowboy": {:hex, :cowboy, "1.0.0"},
+  "cowlib": {:hex, :cowlib, "1.0.1"},
+  "discovery": {:git, "git://github.com/cellulose/discovery.git", "7cef368eac137706339e6c5015031903533dfbd5", []},
+  "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "0ade062cc73122486d33ceb5e713a417f7afdfde", []},
+  "hub": {:git, "git://github.com/cellulose/hub.git", "d981d3382bd4ba1b6baaba8e4cd0cb731d9b4fc8", []},
+  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "d2e369ff42666c3574b8b7ec26f69027895c4d94", [tag: "v4.1.1"]},
+  "jrtp_bridge": {:git, "git://github.com/cellulose/jrtp_bridge.git", "8d4b3f2ae40aaf32e4cd3b4939c4e37bd9cad369", []},
+  "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [ref: "v1.4.3"]},
+  "ranch": {:hex, :ranch, "1.0.0"}}
