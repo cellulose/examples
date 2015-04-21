@@ -3,14 +3,14 @@ defmodule StopWatch.Application do
   use Application
 
   @http_port 8088
-  @echo_prefix :echo
+  @cell_prefix :cell
   @stop_watch_prefix :watch
-  @http_path "localhost:#{@http_port}/#{@echo_prefix}/#{@stop_watch_prefix}/"
+  @http_path "localhost:#{@http_port}/#{@cell_prefix}/#{@stop_watch_prefix}/"
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     dispatch = :cowboy_router.compile([	{:_, [
-      {"/#{@echo_prefix}/[...]", :jrtp_bridge, []},
+      {"/#{@cell_prefix}/[...]", :jrtp_bridge, []},
       {"/[...]", :cowboy_static, {:priv_dir, :stop_watch, "web", [{:mimetypes, :cow_mimetypes, :all}]}},
     ]} ])
     {:ok, _pid} = :cowboy.start_http(:http, 10, [port: @http_port], 
@@ -42,7 +42,7 @@ defmodule StopWatch.GenServer do
 
   @moduledoc """
   A simple stopwatch genserver used for demonstrating atonomous genservers
-  in elixir that can be optionally bound to echo.   This is a common pattern.
+  in elixir that can be optionally bound to cell.   This is a common pattern.
   
   Implements a basic counter with configurable resolution 
   (down to 1ms).  Implements "go", "stop", and "clear" functions.  Also
@@ -118,7 +118,7 @@ defmodule StopWatch.GenServer do
     {:reply, state.ticks, state}
   end
   
-  # request handler (echo compatible)
+  # request handler (cell compatible)
 
   def handle_call({:request, _path, changes, _context}, _from, old_state) do
     new_state = Enum.reduce changes, old_state, fn({k,v}, state) -> 
@@ -127,7 +127,7 @@ defmodule StopWatch.GenServer do
     {:reply, :ok, new_state}
   end
 
-  # handle setting "running" to true or false for go/stop (echo)
+  # handle setting "running" to true or false for go/stop (cell)
   def handle_set(:running, true, state) do
     if not state.running do
       cancel_any_current_timer(state)
@@ -147,14 +147,14 @@ defmodule StopWatch.GenServer do
     end
   end
 
-  # handle setting "ticks" to zero to clear (echo)
+  # handle setting "ticks" to zero to clear (cell)
   def handle_set(:ticks, 0, state) do 
     new_state = %{state | ticks: 0} 
     announce(new_state)
   end
 
   
-  # handle setting "resolution" (echo)
+  # handle setting "resolution" (cell)
   # changes the resolution of the stopwatch.  Try to keep the current time
   # by computing a new tick count based on the new offset, and cancelling
   # timers.   Returns a new state
@@ -193,7 +193,7 @@ defmodule StopWatch.GenServer do
     %{state | tref: nil}
   end
 
-  # announce functions (echo compatible) - returns passed
+  # announce functions (cell compatible) - returns passed
   defp announce(state) do
     elements_with_keys(state, @public_state_keys)
     |> Dict.merge(msec: (state.ticks * state.resolution))

@@ -1,4 +1,6 @@
-## BUGS
+# TODO
+
+## CRITICAL BUGS
 
 Things don't start.  Seems like Hub should be started automatically becaus eit's referenced as an application.a
 
@@ -7,7 +9,7 @@ Things don't start.  Seems like Hub should be started automatically becaus eit's
             ** (EXIT) no process
         
 
-## MIGRATIONS
+## SOON
 
 - make this work with Hub and JrtpBridge, not :hub and :jrtp_bridge
 

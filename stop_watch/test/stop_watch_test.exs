@@ -1,9 +1,9 @@
 defmodule StopWatchTest do
 
   @http_port 8088
-  @echo_prefix :echo
+  @cell_prefix :
   @stop_watch_prefix :watch
-  @http_path "localhost:#{@http_port}/#{@echo_prefix}/#{@stop_watch_prefix}/"
+  @http_path "localhost:#{@http_port}/#{@cell_prefix}/#{@stop_watch_prefix}/"
 
   use ExUnit.Case
   #{:ok, _} = Application.start Stopwatch.Application
