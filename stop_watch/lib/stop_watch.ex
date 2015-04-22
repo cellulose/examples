@@ -8,16 +8,15 @@ defmodule StopWatch.Application do
   @http_path "localhost:#{@http_port}/#{@cell_prefix}/#{@stop_watch_prefix}/"
 
   def start(_type, _args) do
-    :hub.start
     import Supervisor.Spec, warn: false
     dispatch = :cowboy_router.compile([	{:_, [
-      {"/#{@cell_prefix}/[...]", :jrtp_bridge, %{}},
+      {"/#{@cell_prefix}/[...]", JrtpBridge, %{}},
       {"/[...]", :cowboy_static, {:priv_dir, :stop_watch, "web", [{:mimetypes, :cow_mimetypes, :all}]}},
     ]} ])
     {:ok, _pid} = :cowboy.start_http(:http, 10, [port: @http_port],
       [env: [dispatch: dispatch] ])
 
-    # startup the StopWatch.GenServer (which will populate the Echo :hub)
+    # startup the StopWatch.GenServer (which will populate the Echo Hub)
 
     children = [
       worker(StopWatch.GenServer, [startup_params], [name: :stop_watch])
@@ -31,10 +30,10 @@ defmodule StopWatch.Application do
     running: false,
     resolution: 100,
     initializer: fn() ->
-      :hub.update([@stop_watch_prefix], [running: false])
-      :hub.manage([@stop_watch_prefix], [])
+      Hub.update([@stop_watch_prefix], [running: false])
+      Hub.manage([@stop_watch_prefix], [])
     end,
-    announcer: &(:hub.update([@stop_watch_prefix], &1))
+    announcer: &(Hub.update([@stop_watch_prefix], &1))
   }
 
 end
