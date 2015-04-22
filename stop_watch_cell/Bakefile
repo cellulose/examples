@@ -1,0 +1,6 @@
+
+sdk_type = nerves
+sdk_config = nerves_rpi_elixir
+
+project_type = nerves-elixir
+project_id = stop_watch

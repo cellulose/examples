@@ -2,6 +2,5 @@
 
 sdk_type = nerves-cookbook
 sdk_recipe = bbb_cell
-
 project_type = nerves-elixir
 project_id = blinky_cell
