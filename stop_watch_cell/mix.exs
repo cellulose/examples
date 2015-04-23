@@ -28,7 +28,7 @@ defmodule StopWatch.Mixfile do
     { :jrtp_bridge, github: "cellulose/jrtp_bridge" },
     { :ethernet, github: "cellulose/ethernet" },
     { :discovery, github: "cellulose/discovery" },
-    { :logger_multicast_backend, github: "cellulose/logger_muticast_backend"}
+    { :logger_multicast_backend, github: "cellulose/logger_multicast_backend"}
   ]
 
 end

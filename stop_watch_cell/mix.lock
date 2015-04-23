@@ -11,4 +11,5 @@
   "jrtp_bridge": {:git, "git://github.com/cellulose/jrtp_bridge.git", "89ce729c17a74ffe3daea1cd0356f12035bc0968", []},
   "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [ref: "v1.4.3"]},
   "leds": {:git, "git://github.com/cellulose/leds.git", "e7e7fc83c7282f41999a47bb4fea729c513a2934", []},
+  "logger_multicast_backend": {:git, "git://github.com/cellulose/logger_multicast_backend.git", "829a94cafd81d13a70fcca7b8f0d8006a7996e8b", []},
   "ranch": {:hex, :ranch, "1.0.0"}}
