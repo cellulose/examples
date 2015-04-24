@@ -8,7 +8,7 @@ defmodule StopWatch.Application do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
-    
+
     dispatch = :cowboy_router.compile([	{:_, [
       {"/#{@cell_prefix}/[...]", JrtpBridge, %{}},
       {"/[...]", :cowboy_static, {:priv_dir, :stop_watch, "web", [{:mimetypes, :cow_mimetypes, :all}]}},
@@ -16,14 +16,11 @@ defmodule StopWatch.Application do
     {:ok, _pid} = :cowboy.start_http(:http, 10, [port: @http_port],
       [env: [dispatch: dispatch] ])
 
-    # startup the StopWatch.GenServer (which will populate the Echo Hub)
-
     Ethernet.start
 
-    Discovery.start_all
-
     children = [
-      worker(StopWatch.GenServer, [startup_params], [name: :stop_watch])      
+      worker(StopWatch.GenServer, [startup_params], [name: :stop_watch]),
+      worker(Discovery, [], [])
     ]
     opts = [strategy: :one_for_one, name: StopWatch.Supervisor]
     Supervisor.start_link(children, opts)
