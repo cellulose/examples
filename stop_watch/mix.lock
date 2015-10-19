@@ -1,9 +1,9 @@
-%{"cowboy": {:hex, :cowboy, "1.0.0"},
+%{"cowboy": {:hex, :cowboy, "1.0.2"},
   "cowlib": {:hex, :cowlib, "1.0.1"},
-  "discovery": {:git, "git://github.com/cellulose/discovery.git", "7cef368eac137706339e6c5015031903533dfbd5", []},
+  "discovery": {:git, "git://github.com/cellulose/discovery.git", "2989d56aeb6e2230eedd9046737c2f0f8ede5bcc", []},
   "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "0ade062cc73122486d33ceb5e713a417f7afdfde", []},
-  "hub": {:git, "git://github.com/cellulose/hub.git", "8565190c7ddfa0e577a2246f56b52c2c836bd831", []},
+  "hub": {:git, "git://github.com/cellulose/hub.git", "d924c82dcdba19abbaa50445f7aba5dc3c0f5f3b", []},
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "d2e369ff42666c3574b8b7ec26f69027895c4d94", [tag: "v4.1.1"]},
   "jrtp_bridge": {:git, "git://github.com/cellulose/jrtp_bridge.git", "89ce729c17a74ffe3daea1cd0356f12035bc0968", []},
   "jsx": {:git, "git://github.com/talentdeficit/jsx.git", "e50af6e109cb03bd26acf715cbc77de746507d1d", [ref: "v1.4.3"]},
-  "ranch": {:hex, :ranch, "1.0.0"}}
+  "ranch": {:hex, :ranch, "1.1.0"}}

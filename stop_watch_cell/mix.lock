@@ -1,7 +1,7 @@
 %{"conform": {:hex, :conform, "0.13.0"},
   "cowboy": {:hex, :cowboy, "1.0.0"},
   "cowlib": {:hex, :cowlib, "1.0.1"},
-  "discovery": {:git, "git://github.com/cellulose/discovery.git", "7cef368eac137706339e6c5015031903533dfbd5", []},
+  "discovery": {:git, "git://github.com/cellulose/discovery.git", "2989d56aeb6e2230eedd9046737c2f0f8ede5bcc", []},
   "ethernet": {:git, "git://github.com/cellulose/ethernet.git", "b4917b127a88e638af1d2d6797c40de0e8da03ba", []},
   "exrm": {:hex, :exrm, "0.15.3"},
   "firmware": {:git, "git://github.com/cellulose/firmware.git", "fd96d067492644e22820abfa1189f57688e5a0c3", []},
