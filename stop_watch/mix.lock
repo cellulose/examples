@@ -7,5 +7,5 @@
   "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "d2e369ff42666c3574b8b7ec26f69027895c4d94", [tag: "v4.1.1"]},
   "jrtp_bridge": {:git, "https://github.com/cellulose/jrtp_bridge.git", "17499c3dfef69b666036b7391a5b8f2c2d01c50e", []},
   "jsx": {:hex, :jsx, "2.6.2"},
-  "nerves_hub": {:git, "https://github.com/nerves-project/nerves_hub.git", "af1ba2c41bbf9a15091853417e46dfade5f648b4", []},
+  "nerves_hub": {:git, "https://github.com/nerves-project/nerves_hub.git", "b698fc8b8e09c7f54532a8e7dacf81721e85d042", []},
   "ranch": {:hex, :ranch, "1.1.0"}}

@@ -9,6 +9,27 @@ function StopwatchCtrl($scope, $http) {
   $scope.model = { };
   $scope.resolutions = [10, 100, 1000];
 
+  $scope.poller = function() {
+    headers = {'Accept': 'application/merge-patch+json'}
+    if ($scope.last_version) {
+      headers['x-since-version'] = $scope.last_version
+      headers['x-long-poll'] = true
+    }
+    request = {method: 'GET', url: model_url, headers: headers}
+    $http(request).
+      success(function(data, status, headers, config) {
+        angular.extend($scope.model, data)
+        $scope.last_version = headers('x-version')
+        setTimeout($scope.poller, min_poll_interval);
+      }).
+      error(function(data, status, headers, config) {
+        $scope.last_version = null
+        console.error("get failed! with status: ", status);
+        console.error("request: ", request);
+        setTimeout($scope.poller, err_poll_interval);
+      });
+  }
+
   $scope.$watch('model.resolution', function(newValue, oldValue, scope) {
     headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
     if (! angular.equals(oldValue, newValue)) {
@@ -44,6 +65,6 @@ function StopwatchCtrl($scope, $http) {
     return ($scope.model.ticks * $scope.model.resolution) / 1000;
   }
 
-  $scope.POLLER();
+  $scope.poller();
 
 }
