@@ -11,7 +11,7 @@ defmodule StopWatch.Mixfile do
 
   def application, do: [
       mod:          { StopWatch.Application, [] },
-      applications: [ :hub, :jrtp_bridge, :cowboy ],
+      applications: [ :nerves_hub, :jrtp_bridge, :cowboy ],
       env:          [ ]
   ]
 
@@ -22,7 +22,7 @@ defmodule StopWatch.Mixfile do
   defp deps(_), do: [
     { :discovery, github: "cellulose/discovery" },
     { :jrtp_bridge, github: "cellulose/jrtp_bridge" },
-    { :hub, github: "cellulose/hub" }
+    { :nerves_hub, github: "nerves-project/nerves_hub" }
   ]
 
 end

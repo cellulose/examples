@@ -1,6 +1,8 @@
 defmodule StopWatch.Application do
 
   use Application
+  
+  alias Nerves.Hub
 
   @http_port 8088
   @cell_prefix :cell
